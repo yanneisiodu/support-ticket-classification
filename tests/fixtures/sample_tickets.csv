@@ -1,0 +1,11 @@
+body,category
+"My monitor is not working and I need a replacement",hardware
+"Cannot connect to VPN from home office",network
+"Need to reset my email password",access
+"Printer on 3rd floor is jammed",hardware
+"Software license expired for design tool",software
+"WiFi keeps dropping in conference room B",network
+"Request access to shared drive",access
+"Laptop battery drains in 2 hours",hardware
+"Install new version of IDE on my machine",software
+"Cannot access internal website from browser",network

@@ -1,16 +1,22 @@
 """
 Endpoint to launch an experiment on AzureML.
+
+NOTE: This uses Azure ML SDK v1 (azureml-core / Estimator). This is kept as a
+legacy optional path. A future migration to azure.ai.ml v2 is planned.
 """
 
+import logging
 import os
 from os.path import dirname
 from typing import Optional
 
+from azureml.core import Datastore, Experiment, Run, Workspace
 from azureml.train.estimator import Estimator
-from azureml.core import Workspace, Datastore, Experiment, Run
 
-from src.utils import pip_packages
 from src.azure_utils import load_azure_conf
+from src.utils import pip_packages
+
+logger = logging.getLogger(__name__)
 
 
 def run_azure_experiment_with_storage(
@@ -25,9 +31,9 @@ def run_azure_experiment_with_storage(
     experiment_name: Optional[str] = None,
     source_directory: Optional[str] = None,
     image_name: Optional[str] = None,
-    use_gpu=True,
+    use_gpu: bool = True,
 ) -> Run:
-    workspace = Workspace(subscription_id, resource_group, workspace_name,)
+    workspace = Workspace(subscription_id, resource_group, workspace_name)
     data_store = Datastore.register_azure_blob_container(
         workspace=workspace,
         datastore_name=datastore_name,
@@ -36,9 +42,10 @@ def run_azure_experiment_with_storage(
         account_key=storage_account_key,
     )
     source_directory = source_directory or dirname(__file__)
-    assert (
-        compute_name in workspace.compute_targets
-    ), f"compute {compute_name} is not created in {workspace_name} workspace"
+    if compute_name not in workspace.compute_targets:
+        raise ValueError(
+            f"Compute '{compute_name}' is not created in '{workspace_name}' workspace"
+        )
     estimator = Estimator(
         source_directory=source_directory,
         script_params={"--data-folder": data_store.as_mount()},
@@ -51,10 +58,15 @@ def run_azure_experiment_with_storage(
     experiment_name = experiment_name or __file__.split(os.sep)[-1].split(".py")[0]
     experiment = Experiment(workspace=workspace, name=experiment_name)
     run = experiment.submit(estimator)
+    logger.info("Submitted experiment %s, run id: %s", experiment_name, run.id)
     return run
 
 
 if __name__ == "__main__":
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s %(name)s %(levelname)s %(message)s",
+    )
     azure_conf = load_azure_conf()
     run = run_azure_experiment_with_storage(
         subscription_id=azure_conf["SUBSCRIPTION_ID"],
@@ -66,7 +78,6 @@ if __name__ == "__main__":
         storage_account_key=azure_conf["STORAGE"]["AccountKey"],
         compute_name=azure_conf["COMPUTE_NAME"],
         experiment_name=__file__.split(os.sep)[-1].split(".py")[0],
-        # source_directory is whole src directory
         source_directory=os.path.dirname(__file__),
         image_name=azure_conf["IMAGE_NAME"],
         use_gpu=True,

@@ -1,6 +1,18 @@
-FROM python:3.7
-WORKDIR /support_ticket_classification
-ADD ./requirements.txt ./requirements.txt
-RUN pip install -r requirements.txt
-ADD . .
-CMD [ "uvicorn", "--host", "0.0.0.0", "main:app"]
+FROM python:3.11-slim AS base
+
+WORKDIR /app
+
+COPY pyproject.toml ./
+RUN pip install --no-cache-dir . && rm -rf /root/.cache
+
+COPY . .
+
+RUN useradd --create-home appuser
+USER appuser
+
+EXPOSE 8000
+
+HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')" || exit 1
+
+CMD ["uvicorn", "--host", "0.0.0.0", "--port", "8000", "main:app"]

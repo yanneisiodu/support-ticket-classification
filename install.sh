@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
-rm -rf ./env
+python3 -m venv .venv
+source .venv/bin/activate
 
-conda create -p ./env python=3.7.7
-conda activate ./env
+pip install --upgrade pip
+pip install -e ".[dev]"
 
-pip install -r requirements.txt
+echo "Done. Activate with: source .venv/bin/activate"

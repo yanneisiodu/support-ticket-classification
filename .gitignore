@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.venv/
+env/
+
+# Model artifacts
+my_model/
+tokenizer/
+tokenizer.pkl
+label_mapping.json
+*.tar.gz
+
+# Data
+*.csv
+!tests/fixtures/*.csv
+
+# IDE
+.vscode/
+.idea/
+
+# Environment
+.env
+
+# Logs
+logs/
+
+# OS
+.DS_Store

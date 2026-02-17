@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.backends._legacy:_Backend"
+
+[project]
+name = "support-ticket-classification"
+version = "1.0.0"
+description = "IT support ticket classification with DistilBERT"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+
+dependencies = [
+    "numpy>=1.24,<2",
+    "pandas>=2.0,<3",
+    "uvicorn>=0.24,<1",
+    "fastapi>=0.104,<1",
+    "tensorflow>=2.15,<3",
+    "transformers>=4.36,<5",
+    "PyYAML>=6.0,<7",
+    "scikit-learn>=1.3,<2",
+    "requests>=2.31,<3",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4,<9",
+    "httpx>=0.25,<1",
+    "ruff>=0.1,<1",
+]
+azure = [
+    "azure-storage-blob>=12.19,<13",
+    "azureml-core>=1.53,<2",
+    "azureml-train>=1.53,<2",
+]
+
+[tool.setuptools.packages.find]
+include = ["src*"]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

@@ -1,18 +1,17 @@
-# Azure configuration - secrets are loaded from environment variables.
-  # See .env.example for required env vars: AZURE_SUBSCRIPTION_ID, AZURE_STORAGE_ACCOUNT_NAME,
-  # AZURE_STORAGE_ACCOUNT_KEY.
-  
-  LOCAL_DATASET_PATH: "subset_tickets.csv"
-  
-  RESOURCE_GROUP: "rg-ticket-support-classification"
-  
-  STORAGE:
-    DefaultEndpointsProtocol: "https"
-    EndpointSuffix: "core.windows.net"
-  
-  CONTAINER_NAME: "source"
-  WORKSPACE_NAME: "mlw-ticket-support-classification"
-  DATASTORE_NAME: "ds0_support_ticket_classification"
-  IMAGE_NAME: "mcr.microsoft.com/azureml/base-gpu:openmpi3.1.2-cuda10.1-cudnn7-ubuntu18.04"
-  COMPUTE_NAME: "compute-support"
-  
+# Azure configuration — secrets are loaded from environment variables.
+# See .env.example for required env vars: AZURE_SUBSCRIPTION_ID, AZURE_STORAGE_ACCOUNT_NAME,
+# AZURE_STORAGE_ACCOUNT_KEY.
+
+LOCAL_DATASET_PATH: "subset_tickets.csv"
+
+RESOURCE_GROUP: "rg-ticket-support-classification"
+
+STORAGE:
+  DefaultEndpointsProtocol: "https"
+  EndpointSuffix: "core.windows.net"
+
+CONTAINER_NAME: "source"
+WORKSPACE_NAME: "mlw-ticket-support-classification"
+DATASTORE_NAME: "ds0_support_ticket_classification"
+IMAGE_NAME: "mcr.microsoft.com/azureml/base-gpu:openmpi3.1.2-cuda10.1-cudnn7-ubuntu18.04"
+COMPUTE_NAME: "compute-support"
